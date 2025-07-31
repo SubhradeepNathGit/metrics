@@ -1,10 +1,6 @@
-name: GitHub Metrics
-
+name: Metrics
 on:
-  push:
-    branches: [master]
-  schedule:
-    - cron: "0 * * * *"
+  schedule: [{cron: "0 0 * * *"}]
   workflow_dispatch:
 
 jobs:
@@ -13,32 +9,29 @@ jobs:
     steps:
       - uses: lowlighter/metrics@latest
         with:
+          # Required GitHub Token
           token: ${{ secrets.METRICS_TOKEN }}
-          user: Subhradeepnathgit
-          template: classic
 
-          base: header, activity, community, repositories, metadata
-          
+          # Output File
+          filename: github-metrics.svg
+
+          # 🌙 Dark Mode Theme
+          config_display: large
           config_timezone: Asia/Kolkata
-          config_order: base.header, isocalendar, habits, languages, lines, base.activity, base.community
-          
-          # ⏳ Coding Habits (fake-like pattern)
-          plugin_habits: yes
-          plugin_habits_facts: yes
-          plugin_habits_charts: yes
-          plugin_habits_days: 7
-          plugin_habits_from: 200 days ago
-          
-          # 🧠 Languages
-          plugin_languages: yes
-          plugin_languages_colors: github
-          plugin_languages_limit: 8
-          plugin_languages_sections: most-used
-          plugin_languages_aliases: javascript:JS, python:Py, typescript:TS
-          
-          # 📊 Lines of Code
-          plugin_lines: yes
-          
-          # 📆 Fake ISO Calendar
+          config_order: base.activity+code
+
+          # 📆 Full-year commit chart
+          base: activity
           plugin_isocalendar: yes
           plugin_isocalendar_duration: full-year
+
+          # 🧠 Coding Time (Fake or real using Wakatime)
+          plugin_code_time: yes
+          plugin_code_time_compatibility: yes
+          plugin_code_time_token: ${{ secrets.CODETIME_TOKEN }}
+
+          # 🎨 Coding themes
+          plugin_languages: yes
+          plugin_languages_sections: most-used, recently-used
+          plugin_languages_indepth: yes
+          plugin_languages_analysis_timeout: 15
